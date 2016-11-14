@@ -6,10 +6,10 @@ To use, simply call screenInit() at the beginning of your program to set up the 
 
 Example:
 
-screenInit()
-scrnLine[0]="Hello World!"
-scrnLinesTotal=0
-PrintScrn()
+> screenInit()
+> scrnLine[0]="Hello World!"
+> scrnLinesTotal=0
+> PrintScrn()
 
 Output:
 
@@ -17,16 +17,16 @@ Output:
 
 Example 2:
 
-screenInit()
-scrnLine[0]="Hello and Welcome to the Program!"
-scrnLine[1]=""
-scrnLine[2]="Please enter your ##FIRST NAME#\"
-scrnLinesTotal=2
-PrintScrn()
-name=TextWindow.Read()
-scrnLine[2]="Please enter your ##LAST NAME#\"
-PrintScrn()
-lastname=TextWindow.Read()
+> screenInit()
+> scrnLine[0]="Hello and Welcome to the Program!"
+> scrnLine[1]=""
+> scrnLine[2]="Please enter your ##FIRST NAME#\"
+> scrnLinesTotal=2
+> PrintScrn()
+> name=TextWindow.Read()
+> scrnLine[2]="Please enter your ##LAST NAME#\"
+> PrintScrn()
+> lastname=TextWindow.Read()
 
 Output:
 
