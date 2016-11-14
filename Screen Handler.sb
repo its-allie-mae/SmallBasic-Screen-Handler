@@ -82,25 +82,3 @@ Sub ClearScrn
     scrnLine[iClearScrn]=""
   EndFor
 EndSub
-
-
-'SUB GetPath() - Gets Pathname of program
-'
-'TAKES PARAMETERS:
-'  None
-'
-'RETURNS:
-'  appPath = The pathname to the current location of this program
-'
-Sub GetPath
-' Dynamically find the directory path of the executable and store it in a variable
-' called path
-  fileAndPath=File.GetSettingsFilePath()
-  location=0
-  For i= text.GetLength(fileAndPath) To 1 Step -1
-    If Text.GetSubText(fileAndPath,i,1)="\" Then
-      appPath=Text.GetSubText(fileandpath,1,i)
-      i=1
-    EndIf
-  EndFor
-EndSub
