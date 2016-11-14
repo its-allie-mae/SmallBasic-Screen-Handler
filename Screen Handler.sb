@@ -1,0 +1,106 @@
+'Small Basic Screen Handler
+'v1.2.0 2016.10.27
+'By Allison Slater
+'To be imported and used within a program, does nothing by itself.
+
+'SCREEN HANDLER INITIALIZATION - Call this at the beginning of your program to ensure any called upon variables have already been defined properly.  Any changes to settings should be done in this section.
+'
+Sub screenInit
+  'Screen Array, used for displaying the screen in a complete redraw
+  scrnLinesTotal=0 'Var to limit the number of lines drawn in PrintScrn so input line may be closer to data. This should be handled dynamically by your program.
+  scrnLine[21]="" 'Array which stores the data for each line.  If you want to change line 4, set scrnLine[4] to your desired text.
+  'Vars used to determine window colours and colours for highlighted sections of the window
+  winBGDefault=TextWindow.BackgroundColor
+  winFGDefault=textwindow.ForegroundColor
+  'Colours are reversed for highlighted items
+  winBGSel=textwindow.ForegroundColor
+  winFGSel=textwindow.BackgroundColor
+EndSub
+
+'SUB PrintScrn - Redraws the screen
+'
+'TAKES PARAMETERS:
+'  scrnLine[x] = String to be printed on line x of the screen
+'    Wildcard in String: ## = Denotes the beginning of highlighted text, must be followed by end -- only one can be used per string.
+'    Wildcard in String: #\ = Denotes the end of highlighted text, must be preceeded by beginning -- only one can be used per string.
+'    Wildcard in String: @ = Placed only at beginning of string to highlight the entire line
+'  scrnLinesTotal = Total number of lines to draw on the screen
+'  winBGSel = Background colour used for highlight
+'  winFGSel = Forground colour used for highlight
+'  winBGDefault = Background colour used outside highlight
+'  winFGDefault = Foreground colour used outside highlight
+'
+'RETURNS:
+'  Nothing
+'
+Sub PrintScrn
+  TextWindow.Clear()
+  For iPrintScrn=0 To scrnLinesTotal
+    'Special instructions for lines which contain wildcards
+    'NOTE TO DO - CONVERT TO LOOP
+    'For lines with an @ wildcard to highlight the entire line
+    If Text.IsSubText(scrnLine[iPrintScrn],"@") then
+      TextWindow.BackgroundColor=winBGSel
+      TextWindow.ForegroundColor=winFGSel
+      TextWindow.WriteLine(Text.GetSubTextToEnd(scrnLine[iPrintScrn],2))
+      TextWindow.BackgroundColor=winBGDefault
+      TextWindow.ForegroundColor=winFGDefault
+    'For lines with a # wildcard to highlight selections of text
+    ElseIf text.IsSubText(scrnLine[iPrintScrn],"#") then
+      'Program uses a wildcard ## to denote the beginning of a highlighted section and #\ to denote the end of hilighted section.
+      lineToWrite=scrnLine[iPrintScrn]
+      'Get locations of wildcards
+      divider1=text.GetIndexOf(lineToWrite,"##")
+      divider2=text.GetIndexOf(lineToWrite,"#\")
+      'Section of text that falls before highlight
+      TextWindow.Write(Text.GetSubText(lineToWrite,1,divider1-1))
+      'Section of text that falls in highlight
+      TextWindow.BackgroundColor=winBGSel
+      TextWindow.ForegroundColor=winFGSel
+      textwindow.Write(Text.GetSubText(lineToWrite,divider1+2,divider2-divider1-2))
+      'Section of text that falls after highlight
+      TextWindow.BackgroundColor=winBGDefault
+      TextWindow.ForegroundColor=winFGDefault
+      textwindow.WriteLine(Text.GetSubTextToEnd(lineToWrite,divider2+2))
+    'For lines with no wildcards
+    Else
+      TextWindow.WriteLine(scrnLine[iPrintScrn])
+    EndIf
+  EndFor
+EndSub
+
+'SUB ClearScrn - Clears the screen data array
+'
+'TAKES PARAMETERS:
+'  scrnLine[] = The array in which screen data is handled
+'
+'RETURNS:
+'  Nothing
+'
+Sub ClearScrn
+  For iClearScrn=0 To Array.GetItemCount(scrnLine)
+    scrnLine[iClearScrn]=""
+  EndFor
+EndSub
+
+
+'SUB GetPath() - Gets Pathname of program
+'
+'TAKES PARAMETERS:
+'  None
+'
+'RETURNS:
+'  appPath = The pathname to the current location of this program
+'
+Sub GetPath
+' Dynamically find the directory path of the executable and store it in a variable
+' called path
+  fileAndPath=File.GetSettingsFilePath()
+  location=0
+  For i= text.GetLength(fileAndPath) To 1 Step -1
+    If Text.GetSubText(fileAndPath,i,1)="\" Then
+      appPath=Text.GetSubText(fileandpath,1,i)
+      i=1
+    EndIf
+  EndFor
+EndSub
